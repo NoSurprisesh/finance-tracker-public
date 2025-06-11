@@ -28,6 +28,7 @@ def load_user_data_json(username: str) -> UserData:
         user_entries = json.load(file)
 
     user_data = UserData(username)
+    user_data.base_currency = user_entries.get('base_currency', 'USD')
     user_data.incomes = [Entry.from_dict(entry) for entry in user_entries.get('incomes', [])]
     user_data.expenses = [Entry.from_dict(entry) for entry in user_entries.get('expenses', [])]
 
