@@ -7,6 +7,7 @@ def save_user_data_json(user_data: UserData) -> None:
         os.makedirs('data')
 
     user_entries = {
+        'base_currency': user_data.base_currency,
         'incomes' : [entry.to_dict() for entry in user_data.incomes],
         'expenses' : [entry.to_dict() for entry in user_data.expenses],
     }
