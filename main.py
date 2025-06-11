@@ -28,6 +28,17 @@ def show_menus(prompt) -> None:
     for index, item in enumerate(prompt, start=1):
         print(f'{index}. {item}')
 
+def get_menu_actions(user: UserData) -> dict[str, Callable[[], None]]:
+    return {
+        '1': lambda: entry_input(user, 'income'),
+        '2': lambda: entry_input(user, 'expense'),
+        '3': lambda: show_all_entries(user),
+        '4': lambda: show_balance(user),
+        '5': lambda: choose_base_currency(user),
+        '6': lambda: edit_entry(user),
+        '7': lambda: delete_entry(user),
+    }
+
 
 def user_login() -> UserData:
     while True:
