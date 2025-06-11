@@ -19,6 +19,9 @@ MENU_PROMPT = ['Entry an income',
                'Delete an entry',
                'Exit']
 
+EDIT_PROMPT = ['Edit incomes', 'Edit expenses','Back to main menu']
+
+DELETE_PROMPT = []
 
 def show_menu() -> None:
     for index, item in enumerate(MENU_PROMPT, start=1):
