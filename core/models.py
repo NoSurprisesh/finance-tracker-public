@@ -1,4 +1,5 @@
 from datetime import datetime
+from core.exchange import convert_currency
 
 class Entry:
     def __init__(self,
@@ -36,9 +37,12 @@ class Entry:
             note = data['note'],
         )
 
+
+
 class UserData:
-    def __init__(self, username: str):
+    def __init__(self, username: str, base_currency: str = 'USD'):
         self.username = username
+        self.base_currency = base_currency
         self.incomes: list[Entry] = []
         self.expenses: list[Entry] = []
 
@@ -51,8 +55,12 @@ class UserData:
             raise ValueError(f'Unknown flow_type: {entry.flow_type}')
 
     def get_balance(self) -> float:
-        total_income = sum(entry.quantity for entry in self.incomes)
-        total_expenses = sum(entry.quantity for entry in self.expenses)
+        total_income = sum(convert_currency(entry.quantity,
+                                            entry.currency,
+                                            self.base_currency) for entry in self.incomes)
+        total_expenses = sum(convert_currency(entry.quantity,
+                                              entry.currency,
+                                              self.base_currency) for entry in self.expenses)
         return total_income - total_expenses
 
     def edit_entry(self, index: int, flow_type: str, new_entry: Entry) -> None:

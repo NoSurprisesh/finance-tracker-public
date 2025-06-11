@@ -4,6 +4,7 @@ from datetime import datetime
 
 from core.models import UserData, Entry
 from core.storage import save_user_data_json, load_user_data_json
+from core.exchange import get_currency_data
 
 
 WELCOME_EVENT = 'Welcome to my first finance app!'
@@ -13,6 +14,7 @@ MENU_PROMPT = ['Entry an income',
                'Entry an expense',
                'Show all entries',
                'Show balance',
+               'Choose main currency',
                'Exit']
 
 
@@ -23,7 +25,7 @@ def show_menu() -> None:
 
 def user_login() -> UserData:
     while True:
-        user_name = input('Enter user name for log in:').strip()
+        user_name = input('Enter user name for log in:').strip().lower()
         if user_name == '':
             print('User name must not be empty')
         elif os.path.exists(f'data/{user_name}.json'):
@@ -41,10 +43,11 @@ def user_login() -> UserData:
 def start_program() -> None:
     print(WELCOME_EVENT)
     loaded_user = user_login()
-    print(f'Welcome {loaded_user.username}!')
+    print(f'\nWelcome {loaded_user.username}!')
     while True:
+        print()
         show_menu()
-        choice = input('Chose a number from menu (1-5):')
+        choice = input('Chose a number from menu (1-6):')
         if choice not in [str(i+1) for i in range(len(MENU_PROMPT))]:
             print('Invalid input, select only menu numbers')
         else:
@@ -57,6 +60,8 @@ def start_program() -> None:
             elif choice == '4':
                 show_balance(loaded_user)
             elif choice == '5':
+                choose_base_currency(loaded_user)
+            elif choice == '6':
                 print('Exiting...')
                 break
 
@@ -72,9 +77,12 @@ def entry_input(user: UserData, flow_type: str) -> None:
                 break
             except ValueError:
                 print('Invalid input, enter numeric only, try again.')
-
-        currency = input(f'Enter the {flow_type} currency:').strip()
-
+        while True:
+            currency = input(f'Enter the {flow_type} currency:').strip().upper()
+            currency_data = get_currency_data()
+            if currency in currency_data['conversion_rates']:
+                break
+            print(f'Currency data for {currency} not found.')
         while True:
             try:
                 date = datetime.strptime(input(
@@ -126,11 +134,26 @@ def show_balance(user) -> None:
         print('No entries to calculate balance')
     else:
         balance = user.get_balance()
-        currency = (user.incomes[0].currency if user.incomes else user.expenses[0].currency)
+        currency = user.base_currency
         print(f'Your current balance is: '
               f'{'+' if balance > 0 else '' if balance == 0 else '-'}'
               f'{abs(balance):.2f} {currency}')
     print('\nPress ENTER to return to main menu...')
+
+def choose_base_currency(user: UserData) -> None:
+    while True:
+        base_currency = input('Enter the base currency:').strip().upper()
+        if base_currency == user.base_currency:
+            print(f'Your base currency already {user.base_currency}!')
+            return
+        currency_data = get_currency_data()
+        if base_currency in currency_data['conversion_rates']:
+            user.base_currency = base_currency
+            save_user_data_json(user)
+            print(f'{base_currency} is base currency now.')
+            break
+        print(f'Currency data for {base_currency} not found.')
+    input('\nPress ENTER to return to main menu...')
 
 
 if __name__ == '__main__':
