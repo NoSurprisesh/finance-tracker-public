@@ -164,6 +164,24 @@ def choose_base_currency(user: UserData) -> None:
         print(f'Currency data for {base_currency} not found.')
     input('\nPress ENTER to return to main menu...')
 
+def edit_entry(user: UserData) -> None:
+    while True:
+        show_menus(EDIT_PROMPT)
+        choice = input('Enter menu number:').strip()
+        if choice in [str(i+1) for i in range(len(EDIT_PROMPT))]:
+            if choice == '1':
+                pass
+            if choice == '2':
+                pass
+            if choice == '3':
+                return
+        else:
+            print('Invalid input, enter numeric only, try again.')
+
+
+def delete_entry(user: UserData) -> None:
+    pass
+
 
 if __name__ == '__main__':
     start_program()
