@@ -23,8 +23,9 @@ EDIT_PROMPT = ['Edit incomes', 'Edit expenses','Back to main menu']
 
 DELETE_PROMPT = []
 
-def show_menu() -> None:
-    for index, item in enumerate(MENU_PROMPT, start=1):
+
+def show_menus(prompt) -> None:
+    for index, item in enumerate(prompt, start=1):
         print(f'{index}. {item}')
 
 
