@@ -15,6 +15,8 @@ MENU_PROMPT = ['Entry an income',
                'Show all entries',
                'Show balance',
                'Choose main currency',
+               'Edit an entry',
+               'Delete an entry',
                'Exit']
 
 
