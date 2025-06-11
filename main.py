@@ -63,7 +63,7 @@ def start_program() -> None:
     print(f'\nWelcome {loaded_user.username}!')
     while True:
         print()
-        show_menu()
+        show_menus(MENU_PROMPT)
         choice = input('Chose a number from menu (1-6):')
         if choice not in [str(i+1) for i in range(len(MENU_PROMPT))]:
             print('Invalid input, select only menu numbers')
