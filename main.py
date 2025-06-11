@@ -65,22 +65,14 @@ def start_program() -> None:
         print()
         show_menus(MENU_PROMPT)
         choice = input('Chose a number from menu (1-6):')
-        if choice not in [str(i+1) for i in range(len(MENU_PROMPT))]:
-            print('Invalid input, select only menu numbers')
+        menu_actions = get_menu_actions(loaded_user)
+        if choice == '8':
+            print('Exiting...')
+            break
+        elif choice in menu_actions:
+            menu_actions[choice]()
         else:
-            if choice == '1':
-                entry_input(loaded_user, 'income')
-            elif choice == '2':
-                entry_input(loaded_user, 'expense')
-            elif choice == '3':
-                show_all_entries(loaded_user)
-            elif choice == '4':
-                show_balance(loaded_user)
-            elif choice == '5':
-                choose_base_currency(loaded_user)
-            elif choice == '6':
-                print('Exiting...')
-                break
+            print('Invalid choice, please try again.')
 
 
 def entry_input(user: UserData, flow_type: str) -> None:
