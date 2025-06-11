@@ -69,6 +69,7 @@ def start_program() -> None:
 def entry_input(user: UserData, flow_type: str) -> None:
     if flow_type not in ('income', 'expense'):
         raise ValueError(f'Unknown flow_type: {flow_type}')
+    currency_data = get_currency_data()
     while True:
         print(f'Creating new {flow_type} entry...')
         while True:
@@ -79,7 +80,6 @@ def entry_input(user: UserData, flow_type: str) -> None:
                 print('Invalid input, enter numeric only, try again.')
         while True:
             currency = input(f'Enter the {flow_type} currency:').strip().upper()
-            currency_data = get_currency_data()
             if currency in currency_data['conversion_rates']:
                 break
             print(f'Currency data for {currency} not found.')
@@ -129,7 +129,7 @@ def show_all_entries(user: UserData) -> None:
     input('\nPress ENTER to return to main menu...')
 
 
-def show_balance(user) -> None:
+def show_balance(user: UserData) -> None:
     if not user.incomes and not user.expenses:
         print('No entries to calculate balance')
     else:
