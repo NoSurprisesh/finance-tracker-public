@@ -31,8 +31,8 @@ def show_menus(prompt) -> None:
 
 def get_menu_actions(user: UserData) -> dict[str, Callable[[], None]]:
     return {
-        '1': lambda: entry_input(user, 'income'),
-        '2': lambda: entry_input(user, 'expense'),
+        '1': lambda: save_new_entry(user, 'income'),
+        '2': lambda: save_new_entry(user, 'expense'),
         '3': lambda: show_all_entries(user),
         '4': lambda: show_balance(user),
         '5': lambda: choose_base_currency(user),
@@ -171,7 +171,6 @@ def edit_entry(user: UserData) -> None:
     while True:
         show_menus(EDIT_PROMPT)
         choice = input('Enter menu number:').strip()
-        user_data =  load_user_data_json(user.username)
         if choice in [str(i+1) for i in range(len(EDIT_PROMPT))]:
             if choice in ['1', '2']:
                 dict_edits = {'1': user.incomes, '2': user.expenses}
