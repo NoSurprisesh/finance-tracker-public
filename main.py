@@ -122,11 +122,7 @@ def entry_input(flow_type: str, edit: bool = False) -> Entry:
         if input(f'Check the inputted data:\n'
                  f'{new_entry.to_dict()}\n'
                  f'If everything is correct press "y"').strip().lower() == 'y':
-
-            user.add_entry(new_entry)
-            save_user_data_json(user)
-            print(f'{flow_type.capitalize()} entry added.')
-            break
+            return new_entry
         else:
             print("Entry cancelled. Let's try again")
 
