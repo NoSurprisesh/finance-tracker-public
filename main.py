@@ -173,8 +173,9 @@ def edit_entry(user: UserData) -> None:
         choice = input('Enter menu number:').strip()
         user_data =  load_user_data_json(user.username)
         if choice in [str(i+1) for i in range(len(EDIT_PROMPT))]:
-            if choice == '1':
-                for index, item in enumerate(user_data.incomes, start=1):
+            if choice in ['1', '2']:
+                dict_edits = {'1': user.incomes, '2': user.expenses}
+                for index, item in enumerate(dict_edits[choice], start=1):
                     print(f'{index}. [{item.date.strftime('%Y-%m-%d')}] {item.quantity} {item.currency}'
                           f' - {item.category.capitalize()}: (Note:{item.note})')
                 while True:
