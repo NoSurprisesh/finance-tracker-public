@@ -1,6 +1,7 @@
 import os
 
 from datetime import datetime
+from typing import Callable
 
 from core.models import UserData, Entry
 from core.storage import save_user_data_json, load_user_data_json
@@ -168,9 +169,12 @@ def edit_entry(user: UserData) -> None:
     while True:
         show_menus(EDIT_PROMPT)
         choice = input('Enter menu number:').strip()
+        user_data =  load_user_data_json(user.username)
         if choice in [str(i+1) for i in range(len(EDIT_PROMPT))]:
             if choice == '1':
-                pass
+                for index, item in enumerate(user_data.incomes, start=1):
+                    print(f'{index}. [{item.date.strftime('%Y-%m-%d')}] {item.quantity} {item.currency}'
+                          f' - {item.category.capitalize()}: (Note:{item.note})')
             if choice == '2':
                 pass
             if choice == '3':
