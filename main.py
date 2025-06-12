@@ -75,6 +75,11 @@ def start_program() -> None:
         else:
             print('Invalid choice, please try again.')
 
+def save_new_entry(user: UserData, flow_type: str) -> None:
+    new_entry = entry_input(flow_type)
+    user.add_entry(new_entry)
+    save_user_data_json(user)
+    print(f'{flow_type.capitalize()} entry added.')
 
 def entry_input(user: UserData, flow_type: str) -> None:
     if flow_type not in ('income', 'expense'):
