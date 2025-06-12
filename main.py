@@ -87,7 +87,7 @@ def entry_input(flow_type: str, edit: bool = False) -> Entry:
         raise ValueError(f'Unknown flow_type: {flow_type}')
     currency_data = get_currency_data()
     while True:
-        print(f'Creating new {flow_type} entry...')
+        print(f'{'Editing' if edit else 'Create new'} {flow_type} entry...')
         while True:
             try:
                 quantity = float(input(f'Enter the {flow_type} amount:').strip())
