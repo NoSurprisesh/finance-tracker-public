@@ -177,8 +177,19 @@ def edit_entry(user: UserData) -> None:
                 for index, item in enumerate(user_data.incomes, start=1):
                     print(f'{index}. [{item.date.strftime('%Y-%m-%d')}] {item.quantity} {item.currency}'
                           f' - {item.category.capitalize()}: (Note:{item.note})')
-            if choice == '2':
-                pass
+                while True:
+                    try:
+                        entry_index = int(input(f'Enter the entry number to edit:').strip())
+                        if entry_index-1 in range(len(dict_edits[choice])):
+                            flow_type = dict_edits[choice][0].flow_type
+                            new_entry = entry_input(flow_type, True)
+                            user.edit_entry(entry_index-1, flow_type, new_entry)
+                            print(f'Entry {entry_index} edited. ')
+                            break
+                        else:
+                            print(f'Entry {entry_index} not found.')
+                    except ValueError:
+                        print('Invalid input, enter valid number of entry.')
             if choice == '3':
                 return
         else:
