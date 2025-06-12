@@ -81,7 +81,8 @@ def save_new_entry(user: UserData, flow_type: str) -> None:
     save_user_data_json(user)
     print(f'{flow_type.capitalize()} entry added.')
 
-def entry_input(user: UserData, flow_type: str) -> None:
+
+def entry_input(flow_type: str, edit: bool = False) -> Entry:
     if flow_type not in ('income', 'expense'):
         raise ValueError(f'Unknown flow_type: {flow_type}')
     currency_data = get_currency_data()
