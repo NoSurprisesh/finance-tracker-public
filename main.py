@@ -22,12 +22,13 @@ MENU_PROMPT = ['Entry an income',
 
 EDIT_PROMPT = ['Edit incomes', 'Edit expenses','Back to main menu']
 
-DELETE_PROMPT = []
+DELETE_PROMPT = ['Delete income', 'Delete expense', 'Back to main menu']
 
 
 def show_menus(prompt) -> None:
     for index, item in enumerate(prompt, start=1):
         print(f'{index}. {item}')
+
 
 def get_menu_actions(user: UserData) -> dict[str, Callable[[], None]]:
     return {
@@ -74,6 +75,7 @@ def start_program() -> None:
             menu_actions[choice]()
         else:
             print('Invalid choice, please try again.')
+
 
 def save_new_entry(user: UserData, flow_type: str) -> None:
     new_entry = entry_input(flow_type)
@@ -141,6 +143,14 @@ def show_all_entries(user: UserData) -> None:
     input('\nPress ENTER to return to main menu...')
 
 
+def show_part_of_entries(user: UserData, choice: str) -> dict:
+    dict_edits = {'1': user.incomes, '2': user.expenses}
+    for index, item in enumerate(dict_edits[choice], start=1):
+        print(f'{index}. [{item.date.strftime('%Y-%m-%d')}] {item.quantity} {item.currency}'
+              f' - {item.category.capitalize()}: (Note:{item.note})')
+    return dict_edits
+
+
 def show_balance(user: UserData) -> None:
     if not user.incomes and not user.expenses:
         print('No entries to calculate balance')
@@ -151,6 +161,7 @@ def show_balance(user: UserData) -> None:
               f'{'+' if balance > 0 else '' if balance == 0 else '-'}'
               f'{abs(balance):.2f} {currency}')
     print('\nPress ENTER to return to main menu...')
+
 
 def choose_base_currency(user: UserData) -> None:
     while True:
@@ -167,21 +178,19 @@ def choose_base_currency(user: UserData) -> None:
         print(f'Currency data for {base_currency} not found.')
     input('\nPress ENTER to return to main menu...')
 
+
 def edit_entry(user: UserData) -> None:
     while True:
         show_menus(EDIT_PROMPT)
         choice = input('Enter menu number:').strip()
         if choice in [str(i+1) for i in range(len(EDIT_PROMPT))]:
             if choice in ['1', '2']:
-                dict_edits = {'1': user.incomes, '2': user.expenses}
-                for index, item in enumerate(dict_edits[choice], start=1):
-                    print(f'{index}. [{item.date.strftime('%Y-%m-%d')}] {item.quantity} {item.currency}'
-                          f' - {item.category.capitalize()}: (Note:{item.note})')
+                dict_entry = show_part_of_entries(user, choice)
                 while True:
                     try:
                         entry_index = int(input(f'Enter the entry number to edit:').strip())
-                        if entry_index-1 in range(len(dict_edits[choice])):
-                            flow_type = dict_edits[choice][0].flow_type
+                        if entry_index-1 in range(len(dict_entry[choice])):
+                            flow_type = dict_entry[choice][0].flow_type
                             new_entry = entry_input(flow_type, True)
                             user.edit_entry(entry_index-1, flow_type, new_entry)
                             print(f'Entry {entry_index} edited. ')
@@ -197,7 +206,28 @@ def edit_entry(user: UserData) -> None:
 
 
 def delete_entry(user: UserData) -> None:
-    pass
+    while True:
+        show_menus(DELETE_PROMPT)
+        choice = input('Enter menu number:').strip()
+        if choice in [str(i+1) for i in range(len(DELETE_PROMPT))]:
+            if choice in ['1', '2']:
+                dict_entry = show_part_of_entries(user, choice)
+                while True:
+                    try:
+                        removal_index = int(input(f'Enter the entry number to remove:').strip())
+                        if removal_index-1 in range(len(dict_entry[choice])):
+                            user.remove_entry(removal_index-1, dict_entry[choice][0].flow_type)
+                            save_user_data_json(user)
+                            print(f'Entry {removal_index} removed.')
+                            break
+                        else:
+                            print(f'Entry {removal_index} not found.')
+                    except ValueError:
+                        print('Invalid input, enter valid number of entry.')
+            if choice == '3':
+                return
+        else:
+            print('Invalid input, enter numeric only, try again.')
 
 
 if __name__ == '__main__':
