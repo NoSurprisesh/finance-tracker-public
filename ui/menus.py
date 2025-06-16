@@ -1,11 +1,7 @@
 import os
 
 from typing import Callable
-from core.models import UserData
-from core.storage import load_user_data_json, save_user_data_json
-from ui.cli_handlers import (save_new_entry, show_all_entries,
-                             show_balance, choose_base_currency,
-                             edit_entry, delete_entry)
+from ui.cli_handlers import *
 
 
 def user_login() -> UserData:
