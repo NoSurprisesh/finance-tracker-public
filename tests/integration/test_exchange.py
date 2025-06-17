@@ -172,7 +172,7 @@ class TestExchange(TestCase):
                                               'PLN',
                                               'EUR'))
 
-    def test_convert_currency_raise_value_error(self):
+    def test_convert_currency_raise_value_error_zero_rate(self):
         with patch('core.exchange.get_currency_data') as mock_get_currency_data:
             mock_get_currency_data.return_value = {
                 'conversion_rates': {'USD': 0,
@@ -185,6 +185,12 @@ class TestExchange(TestCase):
                                  'PLN')
             self.assertEqual('Invalid or zero rate from USD to PLN',
                                  str(cm.exception))
+
+    def test_convert_currency_raise_value_error_missing_rate(self):
+        with patch('core.exchange.get_currency_data') as mock_get_currency_data:
+            mock_get_currency_data.return_value = {
+                'conversion_rates': {'': ''}
+            }
             with self.assertRaises(ValueError) as cm:
                 convert_currency(100,
                                  'EUR',
