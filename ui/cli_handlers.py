@@ -104,7 +104,7 @@ def choose_base_currency(user: UserData) -> None:
         base_currency = input('Enter the base currency:').strip().upper()
         if base_currency == user.base_currency:
             print(f'Your base currency already {user.base_currency}!')
-            return
+            break
         currency_data = get_currency_data()
         if base_currency in currency_data['conversion_rates']:
             user.base_currency = base_currency
